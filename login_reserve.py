@@ -6,29 +6,49 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-def login(usernm, passwrd):
-        print("made it here")
-        driver = webdriver.Chrome()
-        driver.get("https://www.soul-cycle.com/find-a-class/studio/1/")
+def login(username, passwrd):
+    driver = webdriver.Chrome()
+    driver.get("https://www.soul-cycle.com/find-a-class/studio/1/")
 
-        loginXpath = "//a[@class='link__StyledAnchor-gvmc2k-0 cUEdex userBadge__StyledLink-sc-8r4hz5-2 kGqEMO']"
+    loginXpath = "//a[@class='link__StyledAnchor-gvmc2k-0 cUEdex userBadge__StyledLink-sc-8r4hz5-2 kGqEMO']"
 
+    # Wait for the login button and click it
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.XPATH, loginXpath))
+    )
+    login_btn = driver.find_element(By.XPATH, loginXpath)
+    login_btn.click()
 
-        WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
-                EC.presence_of_all_elements_located((By.XPATH,loginXpath))
+    # Enter email
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.XPATH, '//input[contains(@class, "floating__input")]'))
+    )
+    login_email = driver.find_element(By.XPATH, '//input[contains(@class, "floating__input")]')
+    login_email.send_keys(username + Keys.ENTER)
+
+    # Enter password
+    login_passwrd = driver.find_element(By.XPATH, '//input[@id="password-input"]')
+    login_passwrd.send_keys(passwrd + Keys.ENTER)
+
+    # Click the next button
+    next_button_1 = driver.find_element(By.XPATH, '//button[@id="handle-login"]')
+    next_button_1.click()
+
+    try:
+        # Wait for the reCAPTCHA element for 5 seconds
+        recaptcha_element = WebDriverWait(driver, 3).until(
+            EC.presence_of_element_located((By.XPATH, '//span[@id="recaptcha-anchor"]'))
         )
+        # If found, click the reCAPTCHA
+        recaptcha_element.click()
+        print("reCAPTCHA found and clicked.")
+    except Exception as e:
+        # Handle case where reCAPTCHA does not appear
+        print("reCAPTCHA not found, proceeding without it.")
 
-        login = driver.find_element(By.XPATH,loginXpath)
-        login.click()
-        time.sleep(10)
+    # Wait for some time to observe the result (optional)
+    driver.get("https://www.soul-cycle.com/find-a-class/studio/1/")
+    time.sleep(20)
 
-# WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
-#         EC.presence_of_all_elements_located((By.ID, "bigCookie"))
-# )
-# cookieBut = driver.find_element(By.ID, "bigCookie")
-# while True:
-#         cookieBut.click()
-
-#         #numCookies = driver.find_element(By.XPATH, "//div[@class='title' and @id='cookies']").text
-#         #print(numCookies)
-        #print("\n")
+    # Quit the browser
+    driver.quit()
