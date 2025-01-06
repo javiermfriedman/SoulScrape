@@ -6,24 +6,29 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-driver = webdriver.Chrome()
-driver.get("https://orteil.dashnet.org/cookieclicker/")
+def login(usernm, passwrd):
+        print("made it here")
+        driver = webdriver.Chrome()
+        driver.get("https://www.soul-cycle.com/find-a-class/studio/1/")
+
+        loginXpath = "//a[@class='link__StyledAnchor-gvmc2k-0 cUEdex userBadge__StyledLink-sc-8r4hz5-2 kGqEMO']"
 
 
-WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
-        EC.presence_of_all_elements_located((By.XPATH,"//div[text()='English']"))
-)
+        WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
+                EC.presence_of_all_elements_located((By.XPATH,loginXpath))
+        )
 
-language = driver.find_element(By.XPATH,"//div[text()='English']")
-language.click()
+        login = driver.find_element(By.XPATH,loginXpath)
+        login.click()
+        time.sleep(10)
 
-WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
-        EC.presence_of_all_elements_located((By.ID, "bigCookie"))
-)
-cookieBut = driver.find_element(By.ID, "bigCookie")
-while True:
-        cookieBut.click()
+# WebDriverWait(driver, 5).until( # wait 5 seconds for this element to pop up
+#         EC.presence_of_all_elements_located((By.ID, "bigCookie"))
+# )
+# cookieBut = driver.find_element(By.ID, "bigCookie")
+# while True:
+#         cookieBut.click()
 
-        #numCookies = driver.find_element(By.XPATH, "//div[@class='title' and @id='cookies']").text
-        #print(numCookies)
+#         #numCookies = driver.find_element(By.XPATH, "//div[@class='title' and @id='cookies']").text
+#         #print(numCookies)
         #print("\n")
